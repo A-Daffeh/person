@@ -5,6 +5,7 @@ import com.cs544.project.person.entity.User;
 import com.cs544.project.person.service.AdminService;
 import com.cs544.project.person.value_object.ApplicationsResponseTemplate;
 import com.cs544.project.person.value_object.Job;
+import com.cs544.project.person.value_object.JobApplication;
 import com.cs544.project.person.value_object.ResponseTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,6 @@ public class AdminController {
 
     @PostMapping("/add")
     public User addAdmin(@RequestBody Admin admin){
-//      TODO: admin's company must be filled in
         return adminService.addAdmin(admin);
     }
 
@@ -65,11 +65,19 @@ public class AdminController {
         return adminService.getJobApplicationsByJobId(jobId);
     }
 
-//    TODO: Get all applicants by job title: to be completed
-
-    @GetMapping("/jobs/applications/{jotTitle}")
-    public List<ApplicationsResponseTemplate> getJAllJobApplications(@PathVariable String jotTitle){
+    @GetMapping("/jobs/applications/job/{jotTitle}")
+    public List<ApplicationsResponseTemplate> getJAllJobApplicationsByJobTitle(@PathVariable String jotTitle){
         return adminService.getJobApplicationsByJobTitle(jotTitle);
+    }
+
+    @PutMapping("/jobs/applications/application/{id}")
+    public ApplicationsResponseTemplate processApplication(@PathVariable Long id, @RequestBody JobApplication application){
+        return adminService.processApplication(id, application);
+    }
+
+    @GetMapping("/application/{id}")
+    public ApplicationsResponseTemplate getApplicationById(@PathVariable(name = "id") Long applicationId){
+        return adminService.getApplicationById(applicationId);
     }
 
 }

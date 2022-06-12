@@ -3,8 +3,8 @@ package com.cs544.project.person.controller;
 import com.cs544.project.person.entity.Applicant;
 import com.cs544.project.person.entity.User;
 import com.cs544.project.person.service.ApplicantService;
-import com.cs544.project.person.value_object.Application;
 import com.cs544.project.person.value_object.ApplicationsResponseTemplate;
+import com.cs544.project.person.value_object.JobApplication;
 import com.cs544.project.person.value_object.ResponseTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,26 +44,29 @@ public class ApplicantController {
         return applicantService.getAllJobsFromCompany(companyId);
     }
 
-    // TODO: apply for Job
     @PostMapping("/jobs/apply")
-    public Application applyForJob(@RequestBody Application application){
+    public JobApplication applyForJob(@RequestBody JobApplication application){
         return applicantService.applyForJob(application);
     }
 
-    // TODO: View job applications
     @GetMapping("/applications/{id}")
     public List<ApplicationsResponseTemplate> getAllApplicantsForApplicant(@PathVariable(name = "id") Long applicantId){
         return applicantService.getAllApplicantsForApplicant(applicantId);
     }
 
-    // TODO: Delete application
+    @GetMapping("/application/{id}")
+    public ApplicationsResponseTemplate getApplicationById(@PathVariable(name = "id") Long applicationId){
+        return applicantService.getApplicationById(applicationId);
+    }
+
     @DeleteMapping("/application/{id}")
     public String deleteApplicationForApplicant(@PathVariable(name = "id") Long applicationId){
         applicantService.deleteApplicationForApplicant(applicationId);
         return "Application with id "+applicationId+" successfully deleted.";
     }
 
-    // TODO: View specific application
-
-    // TODO: View jobs by title
+    @GetMapping("/jobs/{name}")
+    public ResponseTemplate getAllJobsByTitle(@PathVariable(name = "name") String jobTitle){
+        return applicantService.getJobsByTitle(jobTitle);
+    }
 }

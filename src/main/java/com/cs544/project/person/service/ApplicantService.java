@@ -3,8 +3,8 @@ package com.cs544.project.person.service;
 import com.cs544.project.person.entity.Applicant;
 import com.cs544.project.person.entity.User;
 import com.cs544.project.person.repository.IUserDao;
-import com.cs544.project.person.value_object.Application;
 import com.cs544.project.person.value_object.ApplicationsResponseTemplate;
+import com.cs544.project.person.value_object.JobApplication;
 import com.cs544.project.person.value_object.ResponseTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,16 +64,24 @@ public class ApplicantService {
         return restTemplate.getForObject("http://APPLICATIONS/applications/applicant/" + applicantId, ArrayList.class);
     }
 
-    public Application applyForJob(Application application) {
+    public JobApplication applyForJob(JobApplication application) {
         User applicant = userDao.findById(application.getApplicantId()).orElse(null);
         if(applicant != null) {
             application.setApplicantName(applicant.getName());
             application.setApplicantContact(applicant.getEmail());
         }
-        return restTemplate.postForObject("http://APPLICATIONS/applications/add", application, Application.class);
+        return restTemplate.postForObject("http://APPLICATIONS/applications/add", application, JobApplication.class);
     }
 
     public void deleteApplicationForApplicant(Long applicationId) {
-        restTemplate.delete("http://APPLICATIONS/applications/application/"+applicationId, Application.class);
+        restTemplate.delete("http://APPLICATIONS/applications/application/"+applicationId, JobApplication.class);
+    }
+
+    public ResponseTemplate getJobsByTitle(String jobTitle) {
+        return restTemplate.getForObject("http://JOB-SERVICE/jobs/job/" + jobTitle, ResponseTemplate.class);
+    }
+
+    public ApplicationsResponseTemplate getApplicationById(Long applicationId) {
+        return restTemplate.getForObject("http://APPLICATIONS/applications/" + applicationId, ApplicationsResponseTemplate.class);
     }
 }

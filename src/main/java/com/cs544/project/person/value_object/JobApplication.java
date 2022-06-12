@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Application {
+public class JobApplication {
 
     private Long applicationId;
     private String applicationDomain;

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplicationsResponseTemplate {
-    private Application application;
+    private JobApplication jobApplication;
     private Job job;
 }

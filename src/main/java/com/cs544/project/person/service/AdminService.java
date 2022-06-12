@@ -5,6 +5,7 @@ import com.cs544.project.person.entity.User;
 import com.cs544.project.person.repository.IUserDao;
 import com.cs544.project.person.value_object.ApplicationsResponseTemplate;
 import com.cs544.project.person.value_object.Job;
+import com.cs544.project.person.value_object.JobApplication;
 import com.cs544.project.person.value_object.ResponseTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,19 @@ public class AdminService {
     }
 
     public List<ApplicationsResponseTemplate> getJobApplicationsByJobTitle(String jotTitle) {
-        return restTemplate.getForObject("http://APPLICATIONS/applications/jobs/name/"+jotTitle, ArrayList.class);
+        return restTemplate.getForObject("http://APPLICATIONS/applications/jobs/job/"+jotTitle, ArrayList.class);
+    }
+
+    public ApplicationsResponseTemplate processApplication(Long id, JobApplication application) {
+        JobApplication storedApplication = getApplicationById(id).getJobApplication();
+        if(Objects.nonNull(application.getStatus()) && !"".equalsIgnoreCase(application.getStatus())){
+            storedApplication.setStatus(application.getStatus());
+        }
+        restTemplate.put("http://APPLICATIONS/applications/"+id, storedApplication, ApplicationsResponseTemplate.class);
+        return getApplicationById(id);
+    }
+
+    public ApplicationsResponseTemplate getApplicationById(Long applicationId) {
+        return restTemplate.getForObject("http://APPLICATIONS/applications/" + applicationId, ApplicationsResponseTemplate.class);
     }
 }
