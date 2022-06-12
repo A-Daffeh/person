@@ -3,13 +3,15 @@ package com.cs544.project.person.service;
 import com.cs544.project.person.entity.Admin;
 import com.cs544.project.person.entity.User;
 import com.cs544.project.person.repository.IUserDao;
-import com.cs544.project.person.value_object.Applications;
+import com.cs544.project.person.value_object.ApplicationsResponseTemplate;
 import com.cs544.project.person.value_object.Job;
 import com.cs544.project.person.value_object.ResponseTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -75,4 +77,11 @@ public class AdminService {
         return "Job with id: "+ id+" successfully deleted";
     }
 
+    public List<ApplicationsResponseTemplate> getJobApplicationsByJobId(Long jobId) {
+        return restTemplate.getForObject("http://APPLICATIONS/applications/jobs/"+jobId, ArrayList.class);
+    }
+
+    public List<ApplicationsResponseTemplate> getJobApplicationsByJobTitle(String jotTitle) {
+        return restTemplate.getForObject("http://APPLICATIONS/applications/jobs/name/"+jotTitle, ArrayList.class);
+    }
 }

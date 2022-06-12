@@ -3,10 +3,13 @@ package com.cs544.project.person.controller;
 import com.cs544.project.person.entity.Admin;
 import com.cs544.project.person.entity.User;
 import com.cs544.project.person.service.AdminService;
+import com.cs544.project.person.value_object.ApplicationsResponseTemplate;
 import com.cs544.project.person.value_object.Job;
 import com.cs544.project.person.value_object.ResponseTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users/admin")
@@ -37,35 +40,36 @@ public class AdminController {
         return "Admin Successfully deleted!";
     }
 
-//  TODO: add job
     @PostMapping("/jobs/add")
     public Job addJob(@RequestBody Job job){
         return adminService.addJob(job);
     }
 
-    //  TODO: Get a job
     @GetMapping("/jobs/{id}")
     public ResponseTemplate getJob(@PathVariable Long id){
         return adminService.getJob(id);
     }
 
-//    TODO: edit job
     @PutMapping("/jobs/{id}")
     public ResponseTemplate editJob(@PathVariable Long id, @RequestBody Job job){
         return adminService.updateJob(id, job);
     }
 
-//    TODO: delete job
     @DeleteMapping("/jobs/{id}")
     public String deleteJob(@PathVariable Long id){
         return adminService.deleteJob(id);
     }
 
-//    TODO: Get all applicants
+    @GetMapping("/jobs/applications/{id}")
+    public List<ApplicationsResponseTemplate> getJAllJobApplications(@PathVariable(name = "id") Long jobId){
+        return adminService.getJobApplicationsByJobId(jobId);
+    }
 
+//    TODO: Get all applicants by job title: to be completed
 
-//    TODO: Get all applicants by job title
-
-
+    @GetMapping("/jobs/applications/{jotTitle}")
+    public List<ApplicationsResponseTemplate> getJAllJobApplications(@PathVariable String jotTitle){
+        return adminService.getJobApplicationsByJobTitle(jotTitle);
+    }
 
 }

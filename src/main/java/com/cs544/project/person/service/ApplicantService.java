@@ -3,9 +3,15 @@ package com.cs544.project.person.service;
 import com.cs544.project.person.entity.Applicant;
 import com.cs544.project.person.entity.User;
 import com.cs544.project.person.repository.IUserDao;
+import com.cs544.project.person.value_object.Application;
+import com.cs544.project.person.value_object.ApplicationsResponseTemplate;
+import com.cs544.project.person.value_object.ResponseTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -13,6 +19,9 @@ public class ApplicantService {
 
     @Autowired
     private IUserDao userDao;
+
+    @Autowired
+    RestTemplate restTemplate;
 
     public User register(Applicant applicant){
         return userDao.save(applicant);
@@ -47,4 +56,24 @@ public class ApplicantService {
         userDao.deleteById(id);
     }
 
+    public List<ResponseTemplate> getAllJobsFromCompany(Long companyId) {
+        return restTemplate.getForObject("http://JOB-SERVICE/jobs/company/" + companyId, ArrayList.class);
+    }
+
+    public List<ApplicationsResponseTemplate> getAllApplicantsForApplicant(Long applicantId) {
+        return restTemplate.getForObject("http://APPLICATIONS/applications/applicant/" + applicantId, ArrayList.class);
+    }
+
+    public Application applyForJob(Application application) {
+        User applicant = userDao.findById(application.getApplicantId()).orElse(null);
+        if(applicant != null) {
+            application.setApplicantName(applicant.getName());
+            application.setApplicantContact(applicant.getEmail());
+        }
+        return restTemplate.postForObject("http://APPLICATIONS/applications/add", application, Application.class);
+    }
+
+    public void deleteApplicationForApplicant(Long applicationId) {
+        restTemplate.delete("http://APPLICATIONS/applications/application/"+applicationId, Application.class);
+    }
 }
